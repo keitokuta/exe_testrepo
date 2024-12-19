@@ -1,5 +1,6 @@
 // OpenWeather APIのキー
-const API_KEY = "YOUR_API_KEY"; // 実際のAPIキーに置き換える必要があります
+// 注意: 本番環境では、APIキーをバックエンドサーバーで管理することを推奨します
+const API_KEY = "YOUR_API_KEY";
 const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
 
 // DOM要素の取得
