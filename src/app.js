@@ -12,6 +12,9 @@ const weatherDescriptionElement = document.getElementById("weatherDescription");
 const humidityElement = document.getElementById("humidity");
 const weatherIconElement = document.getElementById("weatherIcon");
 
+// デフォルトのアイコンを設定
+weatherIconElement.src = "https://openweathermap.org/img/wn/02d@2x.png";
+
 // 天気情報を取得する関数
 async function getWeatherData(city) {
     try {
@@ -24,6 +27,12 @@ async function getWeatherData(city) {
     } catch (error) {
         console.error("エラー:", error);
         alert("天気情報の取得に失敗しました。都市名を確認してください。");
+        // エラー時のデフォルト表示
+        locationElement.textContent = "エラーが発生しました";
+        temperatureElement.textContent = "--";
+        weatherDescriptionElement.textContent = "--";
+        humidityElement.textContent = "--";
+        weatherIconElement.src = "https://openweathermap.org/img/wn/02d@2x.png";
     }
 }
 
@@ -31,11 +40,26 @@ async function getWeatherData(city) {
 function displayWeatherData(data) {
     if (!data) return;
 
-    locationElement.textContent = data.name;
-    temperatureElement.textContent = Math.round(data.main.temp);
-    weatherDescriptionElement.textContent = data.weather[0].description;
-    humidityElement.textContent = data.main.humidity;
-    weatherIconElement.src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+    try {
+        locationElement.textContent = data.name;
+        temperatureElement.textContent = Math.round(data.main.temp);
+        weatherDescriptionElement.textContent = data.weather[0].description;
+        humidityElement.textContent = data.main.humidity;
+
+        // アイコンのURLを構築して設定
+        const iconCode = data.weather[0].icon;
+        const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+        weatherIconElement.src = iconUrl;
+        weatherIconElement.alt = data.weather[0].description;
+    } catch (error) {
+        console.error("データの表示中にエラーが発生しました:", error);
+        // エラー時のデフォルト表示
+        locationElement.textContent = "データの表示に失敗しました";
+        temperatureElement.textContent = "--";
+        weatherDescriptionElement.textContent = "--";
+        humidityElement.textContent = "--";
+        weatherIconElement.src = "https://openweathermap.org/img/wn/02d@2x.png";
+    }
 }
 
 // 位置情報から天気を取得する関数
@@ -51,6 +75,7 @@ async function getWeatherByGeolocation(position) {
     } catch (error) {
         console.error("エラー:", error);
         alert("現在地の天気情報の取得に失敗しました");
+        handleGeolocationError(error);
     }
 }
 
@@ -65,7 +90,11 @@ function handleGeolocationError(error) {
 searchButton.addEventListener("click", () => {
     const city = cityInput.value.trim();
     if (city) {
-        getWeatherData(city).then(displayWeatherData);
+        getWeatherData(city).then((data) => {
+            if (data) displayWeatherData(data);
+        });
+    } else {
+        alert("都市名を入力してください");
     }
 });
 
@@ -74,13 +103,20 @@ cityInput.addEventListener("keypress", (event) => {
     if (event.key === "Enter") {
         const city = cityInput.value.trim();
         if (city) {
-            getWeatherData(city).then(displayWeatherData);
+            getWeatherData(city).then((data) => {
+                if (data) displayWeatherData(data);
+            });
+        } else {
+            alert("都市名を入力してください");
         }
     }
 });
 
 // 初期化処理
 function init() {
+    // デフォルトのアイコンを設定
+    weatherIconElement.src = "https://openweathermap.org/img/wn/02d@2x.png";
+
     // 位置情報の取得を試みる
     if (navigator.geolocation) {
         locationElement.textContent = "位置情報を取得中...";
