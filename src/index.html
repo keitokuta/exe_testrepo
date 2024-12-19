@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>天気情報アプリ</title>
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <div class="container">
+            <h1>天気情報</h1>
+
+            <div class="search-container">
+                <input type="text" id="cityInput" placeholder="都市名を入力" />
+                <button id="searchButton">検索</button>
+            </div>
+
+            <div class="weather-container">
+                <div class="location">
+                    <h2 id="location">位置情報取得中...</h2>
+                </div>
+                <div class="weather-info">
+                    <div class="weather-icon">
+                        <img id="weatherIcon" src="" alt="天気アイコン" />
+                    </div>
+                    <div class="weather-details">
+                        <p class="temperature">気温: <span id="temperature">--</span>°C</p>
+                        <p class="description">天気: <span id="weatherDescription">--</span></p>
+                        <p class="humidity">湿度: <span id="humidity">--</span>%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="app.js"></script>
+    </body>
+</html>
